@@ -1,0 +1,152 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+    {{ message }}
+    <button @click="changeText">Mudar Mensagem</button>
+</div>
+
+<div id="app-2">
+    <!-- v-bind pode ser reduzido para apenas : -->
+    <span :title="message">
+        Pare o mouse sobre mim e veja a dica interligada dinamicamente!
+    </span>
+    <button @click="changeText">Mudar Mensagem</button>
+</div>
+
+<div id="app-3">
+    <p v-if="seen">Agora você me viu</p>
+    <button @click="changeVisibility">Mudar Mensagem</button>
+</div>
+
+<div id="app-4">
+    <ol>
+        <!-- v-for tem a mesma função do forEach do JS puro -->
+        <li v-for="todo in todos">{{ todo.text }}</li>
+    </ol>
+    <input type="text" v-model="inputField">
+    <button @click="pushNewItem">Inserir um novo item na lista</button>
+</div>
+
+<div id="app-5">
+    <p>{{ message }}</p>
+    <button @click="reverseMessage">Inverter Mensagem</button>
+</div>
+
+<div id="app-6">
+    <!-- Two Way Data Binding -->
+    <p>{{ message }}</p>
+    <input type="text" v-model="message">
+</div>
+
+<div id="app-7">
+    <ol>
+        <todo-item
+            v-for="item in groceryList"
+            :todo="item"
+            :key="item.id"></todo-item>
+    </ol>
+</div>
+
+<!--
+Exemplo Fictício:
+
+<div id="app">
+    <app-nav></app-nav>
+    <app-view>
+        <app-sidebar></app-sidebar>
+        <app-content></app-content>
+    </app-view>
+</div>
+-->
+<script>
+    let app = new Vue({ // Instância Vue
+        el: '#app',
+        data: {
+            message: 'Olá Vue!'
+        },
+        methods: {
+            changeText() {
+                app.message = 'Vue se tornou reativo'
+            }
+        },
+    })
+
+    let app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: `Você carregou esta página em ${new Date().toLocaleString()}`
+        },
+        methods: {
+            changeText() {
+                app2.message = 'Alguma nova mensagem'
+            }
+        },
+    })
+
+    let app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        },
+        methods: {
+            changeVisibility() {
+                this.seen = !this.seen
+            }
+        }
+    })
+    
+    let app4 = new Vue({
+        el: '#app-4',
+        data: {
+            todos: [
+                { text: 'Aprender JavaScript' },
+                { text: 'Aprender Vue' },
+                { text: 'Criar algo incrível' }
+            ],
+            inputField: ''
+        },
+        methods: {
+            pushNewItem() {
+                let newItem = { text: this.inputField }
+                this.todos.push(newItem) // Gambiarras, com certeza existe uma forma melhor de fazer isso
+            }
+        }
+    })
+
+    let app5 = new Vue({
+        el: '#app-5',
+        data: {
+            message: 'Essa mensagem pode ser invertida ^^'
+        },
+        methods: {
+            reverseMessage() {
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    })
+
+    let app6 = new Vue({
+        el: '#app-6',
+        data: {
+            message: 'Esta mensagem pode ser alterada pela caixa de texto abaixo'
+        }
+    })
+
+    Vue.component('todo-item', {
+        props: [
+            'todo'
+        ],
+        template: '<li>{{ todo.text }}</li>'
+    })
+
+    let app7 = new Vue({
+        el: '#app-7',
+        data: {
+            groceryList: [
+                { id: 0, text: 'Vegetais' },
+                { id: 1, text: 'Queijo' },
+                { id: 2, text: 'Qualquer outra coisa que humanos podem comer' }
+            ]
+        }
+    })
+</script>
