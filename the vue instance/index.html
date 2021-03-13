@@ -1,0 +1,68 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+    <p>{{ foo }}</p>
+    <!-- O objeto está congelado, logo ele não sofrerá alteração apartir da alteração dentro da Vue Instance -->
+    <button @click="foo = baz">Mudar Texto</button>
+    <!-- Ao realizar o evento de click do botão ele gera um erro, por tentar trocar o valor de uma propriedade imutável -->
+</div>
+
+<div id="exemple"></div>
+
+<script>
+    let data = { a: 1 }
+
+    let vm = new Vue({ // vm = ViewModel
+        data: data
+    })
+    console.log(vm.a === data.a) // Tem a mesma referencia de memória: true
+
+    vm.a = 2
+    console.log(data.a) // Altera o dado original ao alterar o dado apartir de vm
+
+    data.a = 3
+    console.log(vm.a) // O mesmo ocorre do contrário
+    
+    vm.b = 'Hi'
+
+    // É preciso iniciar a propriedade dentro da Vue Instance caso tenha que usar no futuro
+    data.newObject = {
+        newTodoText: '',
+        visitCount: 0,
+        hideCompletedTodos: false,
+        todos: [],
+        error: null
+    }
+
+    let obj = {
+        foo: 'bar'
+    }
+
+    Object.freeze(obj) // Object.freeze, impede a reatividade do vue de funcionar corretamente, mas não gera erros
+
+    let app = new Vue({
+        el: '#app',
+        data: obj
+    })
+
+    let vm2 = new Vue({
+        el: '#exemple',
+        data: data
+    })
+    // Prefixos $ para se referenciar a propriedades e metodos do próprio Vue
+    console.log(vm2.$data === data) // true
+    console.log(vm2.$el === document.getElementById('exemple')) // true
+
+    vm2.$watch('a', function (newValue, oldValue) {
+        // Essa função é executada quando a propriedade `vm.a`
+    })
+
+    let vm3 = new Vue({
+        data: {
+            a: 1
+        },
+        created() {
+            console.log(`a é: ${this.a}`)
+        }
+    })
+</script>
