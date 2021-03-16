@@ -1,0 +1,96 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div id="app">
+    <span>Mensagem: {{ message }}</span>
+    <hr>
+    <span v-once>Mensagem: {{ message }}</span>
+
+    <p>Interpolação textual: {{ rawHtml }}</p>
+    <!-- v-html parecido com o <pre> ou <code> do HTML5 -->
+    <p>Diretiva v-html: <span v-html="rawHtml"></span></p>
+    <button @click="isButtonDisabled"
+        :disabled="btnDisabled">Clique para desativar</button>
+
+    <p>Valor inicial: {{ number }} {{ number + 1 }}</p>
+    <p>{{ ok ? 'Sim' : 'Não' }}</p>
+
+    <div :id="'list-' + id"></div>
+
+    <div @click="changeSeen">
+        <p v-if="seen">[Click para esconder] Agora você me vê</p>
+        <p v-else>[Click para ver] Agora não vê</p>
+    </div>
+
+    <!-- v-bind aplica reatividade a alteração de suas expressões -->
+    <a :href="url">Google</a>
+
+    <p>{{ text }}</p>
+    <!-- v-on = @ -->
+    <button v-on:click="changeText">Alterar o texto</button>
+
+    <br>
+    <a :[attr]="url">Goggle</a>
+
+    <p>{{ text }}</p>
+    <a :[attr]="url">{{ local }}</a>
+    <button @[event]="changeAttribute">Alterar o texto acima</button>
+
+    <div>
+        <!-- Evitar colocar padrões camelcase em nomes de atributos dinamicos, pois o navegador deixa tudo em lowercase,
+            e pode causar um conflito de expressoes não encontradas na instância Vue -->
+        <a :[attrHref]="url">Google</a>
+    </div>
+
+    <!-- Modificador .prevent onde chama a função, event.preventDefault(),
+        impedindo do formulário ser enviado como comportamento padrão -->
+    <form @submit.prevent="onSubmit"></form>
+
+    <!-- Abreviações -->
+    <!-- : para v-bind, @ para v-on -->
+    <a v-bind:href="url">{{ local }}</a>
+    <a :href="url">{{ local }}</a>
+    <button v-on:click="changeMessage">{{ message }}</button>
+    <button @click="changeMessage">{{ message }}</button>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            message: 'Mensagem passiva a alterações',
+            rawHtml: '<span style="color: red">Sou Vermelho</span>',
+            btnDisabled: false, // [null, undefined, false, disabled]
+            // são valores que farão com que a propriedade disabled, não seja aplicada no elemnto html
+            number: 5,
+            ok: true,
+            id: 3,
+            seen: true,
+            url: 'https://google.com.br',
+            text: 'Sujeito a alteração',
+            attr: 'href',
+            event: 'click',
+            local: 'Google',
+            attrhref: 'href'
+        },
+        methods: {
+            isButtonDisabled() {
+                this.btnDisabled = true
+            },
+            changeSeen() {
+                this.seen = !this.seen
+            },
+            changeText() {
+                this.text = 'Esse texto foi alterado de forma reativa'
+            },
+
+            changeAttribute() {
+                this.url = 'https://facebook.com'
+                this.local = 'Facebook'
+                this.attr = null // null pode ser utilizado para remover uma ação que o elemento fará, e não ser incluído no mesmo
+            },
+            changeMessage() {
+                this.message = 'Essa mensagem foi alterada'
+            }
+        },
+    })
+</script>
